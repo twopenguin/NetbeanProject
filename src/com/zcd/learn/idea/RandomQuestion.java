@@ -5,6 +5,10 @@
  */
 package com.zcd.learn.idea;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -39,4 +43,37 @@ public class RandomQuestion {
         return puke;
     }
     
+    /**
+     * 获取一定范围内(大于min，小于max)个数为num 的不重复随机数
+     * @return 
+     * @param min 最小值
+     * @param max 最大值
+     * @param num 所需个数
+     */
+    public List<Integer> getNumRandom(int min, int max,final int num){
+        //TODO 条件检查跳过
+        List<Integer> result = new ArrayList<>(num);
+        Map<Integer, Integer> tempMap = new HashMap<>(num);
+        //当前位置和随机产生的角标交换位置
+        int temp;
+        for(int i = min; i < num + min; i++){
+            int random = ThreadLocalRandom.current().nextInt(min ,max);
+            temp = getKey(tempMap, i);
+            tempMap.put(i, getKey(tempMap, random));
+            tempMap.put(random, temp);
+        }
+        System.out.println(tempMap);
+        int i = 0;
+        for(Map.Entry<Integer, Integer> entry : tempMap.entrySet()){
+            if(i < num){
+                result.add(entry.getValue());
+            }
+            i++;
+        }
+        return result;
+    }
+    
+    private int getKey(Map<Integer, Integer> target, int key){
+        return target.get(key) == null ? key : target.get(key);
+    }
 }
